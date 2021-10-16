@@ -14,6 +14,8 @@ module Game2048
     CUP = 'H'
     ED = 'J'
     SGR = 'm'
+    CPR = '6n'
+    CPA = 'R'
 
     HIDE_CURSOR = '?25l'
     SHOW_CURSOR = '?25h'
@@ -97,6 +99,21 @@ module Game2048
 
     def show_cursor
       @output.write("#{CSI}#{SHOW_CURSOR}")
+    end
+
+    def display_size
+      move_to(999, 999)
+      @output.write("#{CSI}#{CPR}")
+      data = String.new
+      data << read
+      data << read
+      return if data != CSI
+
+      data.clear
+      while (char = read) != CPA
+        data << char
+      end
+      data.split(';').map(&:to_i)
     end
 
     def write(text)
