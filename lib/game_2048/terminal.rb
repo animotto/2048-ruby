@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'io/console'
+
 module Game2048
   ##
   # VT100 terminal
@@ -12,6 +14,9 @@ module Game2048
     CUP = 'H'
     ED = 'J'
     SGR = 'm'
+
+    HIDE_CURSOR = '?25l'
+    SHOW_CURSOR = '?25h'
 
     RESET = 0
     BOLD = 1
@@ -34,7 +39,7 @@ module Game2048
     }.freeze
 
     def initialize(input: $stdin, output: $stdout)
-      @intput = input
+      @input = input
       @output = output
       @sgr = []
     end
@@ -86,10 +91,30 @@ module Game2048
       @output.write("#{CSI}#{RESET}#{SGR}")
     end
 
+    def hide_cursor
+      @output.write("#{CSI}#{HIDE_CURSOR}")
+    end
+
+    def show_cursor
+      @output.write("#{CSI}#{SHOW_CURSOR}")
+    end
+
     def write(text)
       text = "#{CSI}#{@sgr.join(';')}#{SGR}#{text}" unless @sgr.empty?
       @sgr.clear
       @output.write(text)
+    end
+
+    def read
+      @input.readchar
+    end
+
+    def raw_mode
+      @input&.raw!
+    end
+
+    def cooked_mode
+      @input&.cooked!
     end
 
     private
