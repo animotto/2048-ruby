@@ -40,6 +40,13 @@ module Game2048
       white: 7
     }.freeze
 
+    KEY_MAP = {
+      CUU => :up,
+      CUD => :down,
+      CUF => :right,
+      CUB => :left
+    }.freeze
+
     def initialize(input: $stdin, output: $stdout)
       @input = input
       @output = output
@@ -105,12 +112,12 @@ module Game2048
       move_to(999, 999)
       @output.write("#{CSI}#{CPR}")
       data = String.new
-      data << read
-      data << read
+      data << @input.readchar
+      data << @input.readchar
       return if data != CSI
 
       data.clear
-      while (char = read) != CPA
+      while (char = @input.readchar) != CPA
         data << char
       end
       data.split(';').map(&:to_i)
@@ -123,7 +130,22 @@ module Game2048
     end
 
     def read
-      @input.readchar
+      data = @input.readchar
+      if data == "\e"
+        data << @input.readchar
+        if data == CSI
+          data.clear
+          loop do
+            char = @input.readchar
+            data << char
+            break unless char.ord.between?(0x30, 0x39) || char == ';'
+          end
+
+          return KEY_MAP.fetch(data, :unknown)
+        end
+      end
+
+      data
     end
 
     def raw_mode
