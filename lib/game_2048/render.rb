@@ -21,6 +21,7 @@ module Game2048
     STATUSBAR_COLOR = :blue
     STATUSBAR_TEXT_COLOR = :white
     GAMEOVER_COLOR = :red
+    WIN_COLOR = :green
     BLANK = ' '
 
     def initialize(terminal, tiles)
@@ -34,7 +35,7 @@ module Game2048
     def draw
       draw_tiles
       draw_statusbar
-      draw_gameover if @tiles.game_over?
+      draw_gameover
     end
 
     def draw_statusbar
@@ -54,15 +55,24 @@ module Game2048
     end
 
     def draw_gameover
-      line = 'Game over!'
-      x = @cols / 2 - line.length / 2 + 1
       y = @y + @height + 1
-      return if @cols - 2 < x + line.length || @rows - 2 < y
+      return if @rows <= y
 
+      @terminal.move_to(1, y)
+      @terminal.write(BLANK * @cols)
+      @terminal.reset
+
+      line = String.new
+      if @tiles.win?
+        line << 'Win!'
+      elsif @tiles.game_over?
+        line << 'Game over!'
+      end
+      x = @cols / 2 - line.length / 2 + 1
       @terminal.move_to(x, y)
-      @terminal.fg_color(GAMEOVER_COLOR)
+      @tiles.win? ? @terminal.fg_color(WIN_COLOR) : @terminal.fg_color(GAMEOVER_COLOR)
       @terminal.bold
-      @terminal.write(line)
+      @terminal.write(line[0..(@cols - 1)])
       @terminal.reset
     end
 

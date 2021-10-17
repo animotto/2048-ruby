@@ -36,6 +36,11 @@ module Game2048
           stop
         when 'r'
           @tiles.reset
+        end
+
+        next if @tiles.win? || @tiles.game_over?
+
+        case key
         when :up
           @tiles.move_up
         when :down

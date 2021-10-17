@@ -9,6 +9,7 @@ module Game2048
     NEW_TILE_CHANCE = 90
     NEW_TILE_2 = 2
     NEW_TILE_4 = 4
+    WIN_SUM = 2048
 
     attr_reader :items
 
@@ -51,6 +52,10 @@ module Game2048
         return false if b < @items.length && item == @items[b]
       end
       true
+    end
+
+    def win?
+      score >= WIN_SUM
     end
 
     def move_up
