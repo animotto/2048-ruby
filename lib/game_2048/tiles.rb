@@ -39,6 +39,20 @@ module Game2048
       @items[items.sample] = Kernel.rand(1..100) <= NEW_TILE_CHANCE ? NEW_TILE_2 : NEW_TILE_4
     end
 
+    def game_over?
+      return false if @items.index(NO_TILE)
+
+      n = Math.sqrt(SIZE).to_i
+      @items.each.with_index do |item, i|
+        a = i + 1
+        return false if a < @items.length && !(a % n).zero? && item == @items[a]
+
+        b = i + n
+        return false if b < @items.length && item == @items[b]
+      end
+      true
+    end
+
     def move_up
       items = @items.dup
       3.times do |i|
