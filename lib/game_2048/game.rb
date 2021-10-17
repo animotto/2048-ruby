@@ -19,13 +19,10 @@ module Game2048
       @running = true
       @terminal.raw_mode
       @terminal.hide_cursor
-      @terminal.erase_display
-      @render.align
+      @render.refresh
 
       Kernel.trap('SIGWINCH') do
-        @terminal.erase_display
-        @render.align
-        @render.draw
+        @render.refresh
       end
 
       while @running
@@ -36,6 +33,12 @@ module Game2048
           stop
         when 'r'
           @tiles.reset
+        when '+'
+          @render.size += 1
+          @render.refresh
+        when '-'
+          @render.size -= 1
+          @render.refresh
         end
 
         next if @tiles.win? || @tiles.game_over?
