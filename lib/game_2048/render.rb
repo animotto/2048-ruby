@@ -40,16 +40,18 @@ module Game2048
 
     def draw_statusbar
       line = String.new
-      line << " #{@tiles.score} #{VERTICAL} "
+      line << "#{@tiles.score} #{VERTICAL} "
       line << "\u2190\u2193\u2191\u2192 Move #{VERTICAL} "
       line << "r Reset #{VERTICAL} "
       line << 'q Quit'
-      n = @cols - line.length
-      n = 0 if n.negative?
-      line << BLANK * n
+      x = @cols / 2 - line.length / 2 + 1
+      return if @cols < line.length
+
       @terminal.move_to(1, @rows)
-      @terminal.fg_color(STATUSBAR_TEXT_COLOR)
       @terminal.bg_color(STATUSBAR_COLOR)
+      @terminal.write(BLANK * @cols)
+      @terminal.move_to(x, @rows)
+      @terminal.fg_color(STATUSBAR_TEXT_COLOR)
       @terminal.write(line[0..(@cols - 1)])
       @terminal.reset
     end
