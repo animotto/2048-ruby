@@ -123,7 +123,7 @@ module Game2048
       data.split(';').map(&:to_i)
     end
 
-    def write(text)
+    def write(text = '')
       text = "#{CSI}#{@sgr.join(';')}#{SGR}#{text}" unless @sgr.empty?
       @sgr.clear
       @output.write(text)
