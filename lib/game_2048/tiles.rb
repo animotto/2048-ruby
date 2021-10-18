@@ -14,7 +14,7 @@ module Game2048
     attr_reader :items
 
     def initialize(items = nil)
-      raise GameError, "Tile map size must be #{SIZE}" if !items.nil? && items.length != SIZE
+      raise TilesError, "Tile map size must be #{SIZE}" if !items.nil? && items.length != SIZE
 
       if items.nil?
         reset
@@ -55,7 +55,7 @@ module Game2048
     end
 
     def win?
-      score >= WIN_SUM
+      items.count(WIN_SUM) >= 1
     end
 
     def move_up
@@ -123,5 +123,5 @@ module Game2048
     end
   end
 
-  class GameError < StandardError; end
+  class TilesError < StandardError; end
 end
