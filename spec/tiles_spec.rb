@@ -111,4 +111,30 @@ RSpec.describe Tiles do
       expect(tiles.items).to eq(item[16..31])
     end
   end
+
+  it 'Undoes the last move' do
+    100.times do
+      tiles = Tiles.new
+
+      items_prev = tiles.items.dup
+      tiles.undo
+      expect(tiles.items).to eq(items_prev)
+
+      10.times do
+        items_prev = tiles.items.dup
+        case rand(4)
+        when 0
+          tiles.move_up
+        when 1
+          tiles.move_down
+        when 2
+          tiles.move_right
+        when 3
+          tiles.move_left
+        end
+        tiles.undo
+        expect(tiles.items).to eq(items_prev)
+      end
+    end
+  end
 end

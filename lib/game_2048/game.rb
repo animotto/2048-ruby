@@ -52,6 +52,8 @@ module Game2048
           @tiles.move_right
         when :left
           @tiles.move_left
+        when 'u'
+          @tiles.undo
         end
       end
 

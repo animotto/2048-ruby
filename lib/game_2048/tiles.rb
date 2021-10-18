@@ -22,6 +22,7 @@ module Game2048
         @items = items
       end
       @auto_new_tile = auto_new_tile
+      @items_prev = []
     end
 
     def score
@@ -59,6 +60,13 @@ module Game2048
       items.count { |item| item >= WIN_SUM } >= 1
     end
 
+    def undo
+      return if @items_prev.empty?
+
+      @items = @items_prev.dup
+      @items_prev.clear
+    end
+
     def move_up
       items = @items.dup
       n = Math.sqrt(SIZE).to_i
@@ -74,7 +82,10 @@ module Game2048
         end
         move_zeroes(-n)
       end
-      new_tile if items != @items && @auto_new_tile
+      return if items == @items
+
+      @items_prev = items
+      new_tile if @auto_new_tile
     end
 
     def move_down
@@ -92,7 +103,10 @@ module Game2048
         end
         move_zeroes(n)
       end
-      new_tile if items != @items && @auto_new_tile
+      return if items == @items
+
+      @items_prev = items
+      new_tile if @auto_new_tile
     end
 
     def move_right
@@ -110,7 +124,10 @@ module Game2048
         end
         move_zeroes(1)
       end
-      new_tile if items != @items && @auto_new_tile
+      return if items == @items
+
+      @items_prev = items
+      new_tile if @auto_new_tile
     end
 
     def move_left
@@ -128,7 +145,10 @@ module Game2048
         end
         move_zeroes(-1)
       end
-      new_tile if items != @items && @auto_new_tile
+      return if items == @items
+
+      @items_prev = items
+      new_tile if @auto_new_tile
     end
 
     private

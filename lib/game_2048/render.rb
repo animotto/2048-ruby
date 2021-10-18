@@ -60,6 +60,7 @@ module Game2048
       line = String.new
       line << "#{@tiles.score} #{VERTICAL} "
       line << "\u2190\u2193\u2191\u2192 Move #{VERTICAL} "
+      line << "u Undo #{VERTICAL} "
       line << "r Reset #{VERTICAL} "
       line << "+- Scale #{VERTICAL} "
       line << 'q Quit'
