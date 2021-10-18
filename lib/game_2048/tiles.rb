@@ -13,7 +13,7 @@ module Game2048
 
     attr_reader :items
 
-    def initialize(items = nil)
+    def initialize(items = nil, auto_new_tile: true)
       raise TilesError, "Tile map size must be #{SIZE}" if !items.nil? && items.length != SIZE
 
       if items.nil?
@@ -21,6 +21,7 @@ module Game2048
       else
         @items = items
       end
+      @auto_new_tile = auto_new_tile
     end
 
     def score
@@ -58,67 +59,96 @@ module Game2048
       items.count { |item| item >= WIN_SUM } >= 1
     end
 
-    def move_up(new: true)
+    def move_up
       items = @items.dup
-      3.times do |i|
-        n = i * 4 + 4
-        3.times do |j|
-          a = n + j
-          move(a, -4)
+      n = Math.sqrt(SIZE).to_i
+      n.times do |row|
+        move_zeroes(-n)
+        n.times do |column|
+          tile = row * n + column
+          tile_prev = tile - n
+          if !tile_prev.negative? && @items[tile_prev] == @items[tile]
+            @items[tile_prev] += @items[tile]
+            @items[tile] = NO_TILE
+          end
         end
+        move_zeroes(-n)
       end
-      new_tile if items != @items && new
+      new_tile if items != @items && @auto_new_tile
     end
 
     def move_down
       items = @items.dup
-      2.downto(0) do |i|
-        n = i * 4
-        4.times do |j|
-          a = n + j
-          move(a, 4)
+      n = Math.sqrt(SIZE).to_i
+      (n - 1).downto(0) do |row|
+        move_zeroes(n)
+        n.times do |column|
+          tile = row * n + column
+          tile_next = tile + n
+          if tile_next < @items.length && @items[tile_next] == @items[tile]
+            @items[tile_next] += @items[tile]
+            @items[tile] = NO_TILE
+          end
         end
+        move_zeroes(n)
       end
-      new_tile if items != @items
+      new_tile if items != @items && @auto_new_tile
     end
 
     def move_right
       items = @items.dup
-      3.times do |i|
-        4.times do |j|
-          a = i + j * 4
-          move(a, 1)
+      n = Math.sqrt(SIZE).to_i
+      n.times do |row|
+        move_zeroes(1)
+        (n - 1).downto(0) do |column|
+          tile = row * n + column
+          tile_next = tile + 1
+          if tile_next < row * n + n && @items[tile_next] == @items[tile]
+            @items[tile_next] += @items[tile]
+            @items[tile] = NO_TILE
+          end
         end
+        move_zeroes(1)
       end
-      new_tile if items != @items
+      new_tile if items != @items && @auto_new_tile
     end
 
     def move_left
       items = @items.dup
-      2.downto(0) do |i|
-        n = i + 1
-        4.times do |j|
-          a = n + j * 4
-          move(a, -1)
+      n = Math.sqrt(SIZE).to_i
+      n.times do |row|
+        move_zeroes(-1)
+        n.times do |column|
+          tile = row * n + column
+          tile_prev = tile - 1
+          if tile_prev >= row * n && @items[tile_prev] == @items[tile]
+            @items[tile_prev] += @items[tile]
+            @items[tile] = NO_TILE
+          end
         end
+        move_zeroes(-1)
       end
-      new_tile if items != @items
+      new_tile if items != @items && @auto_new_tile
     end
 
     private
 
-    def move(a, b)
-      c = a + b
-      return if c.negative? || c >= @items.length || (b == 1 && (c % 4).zero?) || (b == -1 && ((c + 1) % 4).zero?)
+    def move_zeroes(dir)
+      n = Math.sqrt(SIZE).to_i
+      n.times do |row|
+        n.times do |column|
+          tile = row * n + column
+          loop do
+            tile_other = tile + dir
+            if tile_other.negative? || tile_other >= @items.length || (dir == 1 && tile_other >= row * n + n) || (dir == -1 && tile_other < row * n) || @items[tile_other] != NO_TILE
+              break
+            end
 
-      if @items[c] == @items[a]
-        @items[c] += @items[a]
-        @items[a] = NO_TILE
-        move(c, b)
-      elsif @items[c] == NO_TILE
-        @items[c] = @items[a]
-        @items[a] = NO_TILE
-        move(c, b)
+            @items[tile_other] = @items[tile]
+            @items[tile] = NO_TILE
+            tile = tile_other
+          end
+        end
       end
     end
   end

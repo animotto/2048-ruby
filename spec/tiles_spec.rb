@@ -64,74 +64,51 @@ RSpec.describe Tiles do
   end
 
   it 'Returns the state of the game' do
-    tiles = Tiles.new
-    expect(tiles.game_over?).to be_falsey
-    expect(tiles.win?).to be_falsey
-
-    items = [
-      2, 4, 8, 4,
-      4, 2, 4, 2,
-      8, 4, 2, 8,
-      4, 2, 8, 4
-    ]
-    tiles = Tiles.new(items)
-    expect(tiles.game_over?).to be_truthy
-    expect(tiles.win?).to be_falsey
-
-    items = [
-      32, 32, 8, 4,
-      4, 512, 16, 128,
-      8, 2048, 0, 8,
-      4, 64, 32, 64
-    ]
-    tiles = Tiles.new(items)
-    expect(tiles.game_over?).to be_falsey
-    expect(tiles.win?).to be_truthy
-
-    items = [
-      0, 0, 0, 0,
-      0, 64, 1024, 0,
-      0, 0, 512, 0,
-      0, 512, 0, 0
-    ]
-    tiles = Tiles.new(items)
-    expect(tiles.game_over?).to be_falsey
-    expect(tiles.win?).to be_falsey
-
-    items = [
-      0, 4096, 0, 0,
-      0, 0, 1024, 0,
-      0, 0, 512, 0,
-      0, 256, 0, 0
-    ]
-    tiles = Tiles.new(items)
-    expect(tiles.game_over?).to be_falsey
-    expect(tiles.win?).to be_truthy
+    items = JSON.parse(File.read('spec/tiles/game_state.json'))
+    items.each do |item|
+      tiles = Tiles.new(item['tiles'])
+      expect(tiles.game_over?).to eq(item['game_over'])
+      expect(tiles.win?).to eq(item['win'])
+    end
   end
 
   it 'Moves up' do
     items = JSON.parse(File.read('spec/tiles/move_up.json'))
 
     items.each do |item|
-      tiles = Tiles.new(item[0..15])
-      tiles.move_up(new: false)
+      tiles = Tiles.new(item[0..15], auto_new_tile: false)
+      tiles.move_up
       expect(tiles.items).to eq(item[16..31])
     end
-
-    # expected:
-    # 8, 16, 4, 16,
-    # 0, 8, 2, 8,
-    # 0, 4, 8, 2,
-    # 0, 0, 16, 0
-
-    # got:
-    # 8, 16, 4, 8,
-    # 0, 8, 2, 8,
-    # 0, 4, 8, 8,
-    # 0, 0, 16, 2
   end
 
-  it 'Moves down'
-  it 'Moves right'
-  it 'Moves left'
+  it 'Moves down' do
+    items = JSON.parse(File.read('spec/tiles/move_down.json'))
+
+    items.each do |item|
+      tiles = Tiles.new(item[0..15], auto_new_tile: false)
+      tiles.move_down
+      expect(tiles.items).to eq(item[16..31])
+    end
+  end
+
+  it 'Moves right' do
+    items = JSON.parse(File.read('spec/tiles/move_right.json'))
+
+    items.each do |item|
+      tiles = Tiles.new(item[0..15], auto_new_tile: false)
+      tiles.move_right
+      expect(tiles.items).to eq(item[16..31])
+    end
+  end
+
+  it 'Moves left' do
+    items = JSON.parse(File.read('spec/tiles/move_left.json'))
+
+    items.each do |item|
+      tiles = Tiles.new(item[0..15], auto_new_tile: false)
+      tiles.move_left
+      expect(tiles.items).to eq(item[16..31])
+    end
+  end
 end
