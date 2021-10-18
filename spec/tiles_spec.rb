@@ -2,6 +2,7 @@
 
 require 'game_2048/tiles'
 require 'json'
+require 'securerandom'
 
 include Game2048
 
@@ -25,7 +26,7 @@ RSpec.describe Tiles do
   it 'Returns sum of score' do
     100.times do |i|
       if i.even?
-        items = Array.new(SIZE) { rand(0..999) }
+        items = Array.new(SIZE) { SecureRandom.rand(0..999) }
         tiles = Tiles.new(items)
         expect(tiles.score).to eq(items.sum)
       else
@@ -37,7 +38,7 @@ RSpec.describe Tiles do
 
   it 'Resets tiles' do
     100.times do |i|
-      items = Array.new(SIZE) { rand(0..999) }
+      items = Array.new(SIZE) { SecureRandom.rand(0..999) }
       tiles = i.even? ? Tiles.new(items) : Tiles.new
       tiles.reset
       tile2 = tiles.items.count(2)
@@ -122,7 +123,7 @@ RSpec.describe Tiles do
 
       10.times do
         items_prev = tiles.items.dup
-        case rand(4)
+        case SecureRandom.rand(4)
         when 0
           tiles.move_up
         when 1

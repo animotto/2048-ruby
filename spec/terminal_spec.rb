@@ -2,6 +2,7 @@
 
 require 'game_2048/terminal'
 require 'stringio'
+require 'securerandom'
 
 include Game2048
 
@@ -29,8 +30,8 @@ RSpec.describe Terminal do
   it 'Moves the cursor to specific rows/columns' do
     100.times do
       clear_buffer(output)
-      x = rand(-999..999)
-      y = rand(-999..999)
+      x = SecureRandom.rand(-999..999)
+      y = SecureRandom.rand(-999..999)
       terminal.move_to(x, y)
       expect(output.string).to eq("\e[#{y};#{x}H")
     end
@@ -129,8 +130,8 @@ RSpec.describe Terminal do
     100.times do
       clear_buffer(input)
       clear_buffer(output)
-      rows = rand(-999..999)
-      cols = rand(-999..999)
+      rows = SecureRandom.rand(-999..999)
+      cols = SecureRandom.rand(-999..999)
       input.write("\e[#{rows};#{cols}R")
       input.rewind
       r_rows, r_cols = terminal.display_size

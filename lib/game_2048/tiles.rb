@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 module Game2048
   ##
   # Game
@@ -39,7 +41,7 @@ module Game2048
       @items.each.with_index { |tile, i| items << i if tile == NO_TILE }
       return if items.empty?
 
-      @items[items.sample] = Kernel.rand(1..100) <= NEW_TILE_CHANCE ? NEW_TILE_2 : NEW_TILE_4
+      @items[items.sample] = SecureRandom.rand(1..100) <= NEW_TILE_CHANCE ? NEW_TILE_2 : NEW_TILE_4
     end
 
     def game_over?
