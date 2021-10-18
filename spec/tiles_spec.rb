@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'game_2048/tiles'
+require 'json'
 
 include Game2048
 
@@ -86,9 +87,50 @@ RSpec.describe Tiles do
     tiles = Tiles.new(items)
     expect(tiles.game_over?).to be_falsey
     expect(tiles.win?).to be_truthy
+
+    items = [
+      0, 0, 0, 0,
+      0, 64, 1024, 0,
+      0, 0, 512, 0,
+      0, 512, 0, 0
+    ]
+    tiles = Tiles.new(items)
+    expect(tiles.game_over?).to be_falsey
+    expect(tiles.win?).to be_falsey
+
+    items = [
+      0, 4096, 0, 0,
+      0, 0, 1024, 0,
+      0, 0, 512, 0,
+      0, 256, 0, 0
+    ]
+    tiles = Tiles.new(items)
+    expect(tiles.game_over?).to be_falsey
+    expect(tiles.win?).to be_truthy
   end
 
-  it 'Moves up'
+  it 'Moves up' do
+    items = JSON.parse(File.read('spec/tiles/move_up.json'))
+
+    items.each do |item|
+      tiles = Tiles.new(item[0..15])
+      tiles.move_up(new: false)
+      expect(tiles.items).to eq(item[16..31])
+    end
+
+    # expected:
+    # 8, 16, 4, 16,
+    # 0, 8, 2, 8,
+    # 0, 4, 8, 2,
+    # 0, 0, 16, 0
+
+    # got:
+    # 8, 16, 4, 8,
+    # 0, 8, 2, 8,
+    # 0, 4, 8, 8,
+    # 0, 0, 16, 2
+  end
+
   it 'Moves down'
   it 'Moves right'
   it 'Moves left'

@@ -55,10 +55,10 @@ module Game2048
     end
 
     def win?
-      items.count(WIN_SUM) >= 1
+      items.count { |item| item >= WIN_SUM } >= 1
     end
 
-    def move_up
+    def move_up(new: true)
       items = @items.dup
       3.times do |i|
         n = i * 4 + 4
@@ -67,7 +67,7 @@ module Game2048
           move(a, -4)
         end
       end
-      new_tile if items != @items
+      new_tile if items != @items && new
     end
 
     def move_down
