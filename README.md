@@ -3,3 +3,6 @@
 
 ## Screenshot
 ![Screenshot](images/screenshot.png)
+
+## Installation
+    $ gem install 2048-ruby
