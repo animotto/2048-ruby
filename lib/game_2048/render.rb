@@ -166,7 +166,11 @@ module Game2048
     end
 
     def align
-      @rows, @cols = @terminal.display_size
+      rows, cols = @terminal.display_size
+      return if rows.nil? || cols.nil?
+
+      @rows = rows
+      @cols = cols
       n = Math.sqrt(Tiles::SIZE).to_i
       @width = @size * 2 * n + n + 1
       @height = @size * n + n + 1
