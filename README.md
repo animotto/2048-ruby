@@ -1,5 +1,6 @@
 # Classic game 2048 in your terminal
 
+![GitHub](https://img.shields.io/github/license/animotto/2048-ruby)
 ![Tests](https://github.com/animotto/2048-ruby/actions/workflows/tests.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/2048-ruby.svg)](https://badge.fury.io/rb/2048-ruby)
 
