@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = '2048-ruby'
-  s.version = '0.1'
+  s.version = '0.2'
   s.licenses = ['MIT']
   s.summary = 'Classic game 2048 in your terminal'
   s.authors = ['anim']
