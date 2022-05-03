@@ -19,6 +19,8 @@ module Game2048
 
     HIDE_CURSOR = '?25l'
     SHOW_CURSOR = '?25h'
+    ALT_SCREEN_ON = '?1049h'
+    ALT_SCREEN_OFF = '?1049l'
 
     RESET = 0
     BOLD = 1
@@ -106,6 +108,14 @@ module Game2048
 
     def show_cursor
       @output.write("#{CSI}#{SHOW_CURSOR}")
+    end
+
+    def alt_screen_on
+      @output.write("#{CSI}#{ALT_SCREEN_ON}")
+    end
+
+    def alt_screen_off
+      @output.write("#{CSI}#{ALT_SCREEN_OFF}")
     end
 
     def display_size

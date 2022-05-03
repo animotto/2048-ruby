@@ -18,6 +18,7 @@ module Game2048
     def run
       @running = true
       @terminal.raw_mode
+      @terminal.alt_screen_on
       @terminal.hide_cursor
       @render.refresh
 
@@ -58,9 +59,8 @@ module Game2048
       end
 
       @terminal.cooked_mode
-      @terminal.erase_display
+      @terminal.alt_screen_off
       @terminal.show_cursor
-      @terminal.move_home
     end
   end
 end
