@@ -17,21 +17,28 @@ module Game2048
 
     def run
       @running = true
-      @terminal.raw_mode
-      @terminal.alt_screen_on
-      @terminal.hide_cursor
-      @render.refresh
+      terminal_init
 
       Kernel.trap('SIGWINCH') do
         @render.refresh
       end
 
+      Kernel.trap('SIGCONT') do
+        terminal_init
+      end
+
       while @running
         @render.draw
         key = @terminal.read
+
         case key
-        when 'q'
+        when 'q', :ctrl_c
           stop
+        when :ctrl_l
+          @render.refresh
+        when :ctrl_z
+          terminal_clear
+          Process.kill('SIGSTOP', Process.pid)
         when 'r'
           @tiles.reset
         when '+'
@@ -58,6 +65,19 @@ module Game2048
         end
       end
 
+      terminal_clear
+    end
+
+    private
+
+    def terminal_init
+      @terminal.raw_mode
+      @terminal.alt_screen_on
+      @terminal.hide_cursor
+      @render.refresh
+    end
+
+    def terminal_clear
       @terminal.cooked_mode
       @terminal.alt_screen_off
       @terminal.show_cursor

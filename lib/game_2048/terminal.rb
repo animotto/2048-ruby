@@ -49,6 +49,12 @@ module Game2048
       CUB => :left
     }.freeze
 
+    CHARS_MAP = {
+      "\x03" => :ctrl_c,
+      "\x0c" => :ctrl_l,
+      "\x1a" => :ctrl_z
+    }.freeze
+
     def initialize(input: $stdin, output: $stdout)
       @input = input
       @output = output
@@ -155,7 +161,7 @@ module Game2048
         end
       end
 
-      data
+      CHARS_MAP.fetch(data, data)
     end
 
     def raw_mode
